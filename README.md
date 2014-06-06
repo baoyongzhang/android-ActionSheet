@@ -3,5 +3,5 @@
 
 <p>
    <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-1.png" width="320" alt="Screenshot"/>
-   <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-2.png" alt="Screenshot"/>
+   <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-2.png" width="320" alt="Screenshot"/>
 </p>

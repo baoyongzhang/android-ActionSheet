@@ -75,7 +75,6 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		mView = createView();
 		mGroup = (ViewGroup) getActivity().getWindow().getDecorView();
 
-		// create view items
 		createItems();
 
 		mGroup.addView(mView);
@@ -219,7 +218,6 @@ public class ActionSheet extends Fragment implements OnClickListener {
 
 	private Attributes readAttribute() {
 		Attributes attrs = new Attributes(getActivity());
-		// read style
 		TypedArray a = getActivity().getTheme().obtainStyledAttributes(null,
 				R.styleable.ActionSheet, R.attr.actionSheetStyle, 0);
 		Drawable background = a
@@ -289,7 +287,6 @@ public class ActionSheet extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == BG_VIEW_ID) {
-			// click background
 			return;
 		}
 		dismiss();
@@ -308,7 +305,6 @@ public class ActionSheet extends Fragment implements OnClickListener {
 
 		public Attributes(Context context) {
 			mContext = context;
-			// default value
 			this.background = new ColorDrawable(Color.TRANSPARENT);
 			this.cancelButtonBackground = new ColorDrawable(Color.BLACK);
 			ColorDrawable gray = new ColorDrawable(Color.GRAY);
@@ -325,7 +321,6 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		}
 
 		public Drawable getOtherButtonMiddleBackground() {
-			// if is a selector, need create a new drawable object
 			if (otherButtonMiddleBackground instanceof StateListDrawable) {
 				TypedArray a = mContext.getTheme().obtainStyledAttributes(null,
 						R.styleable.ActionSheet, R.attr.actionSheetStyle, 0);

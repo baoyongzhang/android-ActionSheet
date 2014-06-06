@@ -26,9 +26,11 @@ public class MainActivity extends FragmentActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ios6:
+			// 请在styles.xml中配置
 			setTheme(R.style.ActionSheetStyleIOS6);
 			break;
 		case R.id.ios7:
+			// 请在styles.xml中配置
 			setTheme(R.style.ActionSheetStyleIOS7);
 			break;
 		}

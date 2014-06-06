@@ -80,6 +80,6 @@ new ActionSheet.Builder(this, getSupportFragmentManager())
 * `actionSheetPadding` 内边距
 * `otherButtonSpacing` 选项按钮的间距
 * `cancelButtonMarginTop` 取消按钮顶部间距
-* `actionSheetTextSize` 选项按钮颜色
+* `actionSheetTextSize` 选项按钮文字颜色
 
 

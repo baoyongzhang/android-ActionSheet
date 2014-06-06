@@ -148,7 +148,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 				bt.setTextColor(mAttrs.otherButtonTextColor);
 				bt.setTextSize(mAttrs.actionSheetTextSize);
 				if (i > 0) {
-					LinearLayout.LayoutParams params = createButtonLayoutParaams();
+					LinearLayout.LayoutParams params = createButtonLayoutParams();
 					params.topMargin = mAttrs.otherButtonSpacing;
 					mPanel.addView(bt, params);
 				} else {
@@ -164,7 +164,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		bt.setText(getCancelButtonTitle());
 		bt.setTextColor(mAttrs.cancelButtonTextColor);
 		bt.setOnClickListener(this);
-		LinearLayout.LayoutParams params = createButtonLayoutParaams();
+		LinearLayout.LayoutParams params = createButtonLayoutParams();
 		params.topMargin = mAttrs.cancelButtonMarginTop;
 		mPanel.addView(bt, params);
 
@@ -173,7 +173,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 				mAttrs.padding);
 	}
 
-	public LinearLayout.LayoutParams createButtonLayoutParaams() {
+	public LinearLayout.LayoutParams createButtonLayoutParams() {
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		return params;
@@ -212,7 +212,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 			public void run() {
 				mGroup.removeView(mView);
 			}
-		}, 500);
+		}, ALPHA_DURATION);
 		super.onDestroyView();
 	}
 

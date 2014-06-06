@@ -9,4 +9,77 @@
 
 # 使用方法
 
-待续。。。
+### 创建一个ActionSheet并显示
+
+```java
+new ActionSheet.Builder(this, getSupportFragmentManager())
+				.setCancelButtonTitle("Cancel")
+				.setOtherButtonTitles("Item1", "Item2", "Item3", "Item4")
+				.setListener(this).show();
+```
+
+### 事件监听
+
+实现`ActionSheetListener`接口
+
+```java
+   @Override
+	public void onCancelButtonClick(ActionSheet actionSheet) {
+		Toast.makeText(getApplicationContext(), "click cancel", 0).show();
+	}
+
+	@Override
+	public void onOtherButtonClick(ActionSheet actionSheet, int index) {
+		Toast.makeText(getApplicationContext(), "click item index = " + index,
+				0).show();
+	}
+```
+
+### 样式
+
+默认的样式非常丑陋，项目中提供了两种Style，可以配置Theme
+
+```xml
+<!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="actionSheetStyle">@style/ActionSheetStyleIOS6</item>
+        or
+        <item name="actionSheetStyle">@style/ActionSheetStyleIOS7</item>
+    </style>
+```
+
+还可以自定义样式，自定义一个style即可，可以参考ActionSheetStyleIOS6/ActionSheetStyleIOS7的写法
+
+```xml
+ <!-- IOS7样式 -->
+ <style name="ActionSheetStyleIOS7">
+        <item name="actionSheetBackground">@android:color/transparent</item>
+        <item name="cancelButtonBackground">@drawable/slt_as_ios7_cancel_bt</item>
+        <item name="otherButtonTopBackground">@drawable/slt_as_ios7_other_bt_top</item>
+        <item name="otherButtonMiddleBackground">@drawable/slt_as_ios7_other_bt_middle</item>
+        <item name="otherButtonBottomBackground">@drawable/slt_as_ios7_other_bt_bottom</item>
+        <item name="otherButtonSingleBackground">@drawable/slt_as_ios7_other_bt_single</item>
+        <item name="cancelButtonTextColor">#1E82FF</item>
+        <item name="otherButtonTextColor">#1E82FF</item>
+        <item name="actionSheetPadding">10dp</item>
+        <item name="otherButtonSpacing">0dp</item>
+        <item name="cancelButtonMarginTop">10dp</item>
+        <item name="actionSheetTextSize">12sp</item>
+    </style>
+```
+
+### Style属性介绍
+* `actionSheetBackground` 背景
+* `cancelButtonBackground` 取消按钮背景
+* `otherButtonTopBackground` 选项顶部按钮背景
+* `otherButtonMiddleBackground` 选项中部按钮背景
+* `otherButtonBottomBackground` 选项底部按钮背景
+* `otherButtonSingleBackground` 选项只有一个的按钮背景
+* `cancelButtonTextColor` 取消按钮的文字颜色
+* `otherButtonTextColor` 选项按钮的文字颜色
+* `actionSheetPadding` 内边距
+* `otherButtonSpacing` 选项按钮的间距
+* `cancelButtonMarginTop` 取消按钮顶部间距
+* `actionSheetTextSize` 选项按钮颜色
+
+

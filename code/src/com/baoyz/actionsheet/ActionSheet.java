@@ -5,22 +5,26 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**
- * 上拉菜单
+ * UIActionSheet
  * 
  * @author Baoyz
  * 
@@ -31,6 +35,9 @@ public class ActionSheet extends Fragment implements OnClickListener {
 	private static final String ARG_CANCEL_BUTTON_TITLE = "cancel_button_title";
 	private static final String ARG_OTHER_BUTTON_TITLES = "other_button_titles";
 	private static final int CANCEL_BUTTON_ID = 100;
+	private static final int BG_VIEW_ID = 10;
+	private static final int TRANSLATE_DURATION = 200;
+	private static final int ALPHA_DURATION = 300;
 
 	private boolean mDismissed = true;
 	private ActionSheetListener mListener;
@@ -65,20 +72,69 @@ public class ActionSheet extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		mAttrs = readAttribute();
 
-		mView = View.inflate(getActivity(), R.layout.as_default, null);
+		mView = createView();
 		mGroup = (ViewGroup) getActivity().getWindow().getDecorView();
-		mPanel = (LinearLayout) mView.findViewById(R.id.panel);
-		mBg = mView.findViewById(R.id.view_bg);
 
-		// 创建元素
+		// create view items
 		createItems();
 
 		mGroup.addView(mView);
-		mBg.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-				R.anim.as_alpha_in));
-		mPanel.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-				R.anim.as_bottom_in));
+		mBg.startAnimation(createAlphaInAnimation());
+		mPanel.startAnimation(createTranslationInAnimation());
 		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+	private Animation createTranslationInAnimation() {
+		int type = TranslateAnimation.RELATIVE_TO_SELF;
+		TranslateAnimation an = new TranslateAnimation(type, 0, type, 0, type,
+				1, type, 0);
+		an.setDuration(TRANSLATE_DURATION);
+		return an;
+	}
+
+	private Animation createAlphaInAnimation() {
+		AlphaAnimation an = new AlphaAnimation(0, 1);
+		an.setDuration(ALPHA_DURATION);
+		return an;
+	}
+
+	private Animation createTranslationOutAnimation() {
+		int type = TranslateAnimation.RELATIVE_TO_SELF;
+		TranslateAnimation an = new TranslateAnimation(type, 0, type, 0, type,
+				0, type, 1);
+		an.setDuration(TRANSLATE_DURATION);
+		an.setFillAfter(true);
+		return an;
+	}
+
+	private Animation createAlphaOutAnimation() {
+		AlphaAnimation an = new AlphaAnimation(1, 0);
+		an.setDuration(ALPHA_DURATION);
+		an.setFillAfter(true);
+		return an;
+	}
+
+	private View createView() {
+		FrameLayout parent = new FrameLayout(getActivity());
+		parent.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
+		mBg = new View(getActivity());
+		mBg.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
+		mBg.setBackgroundColor(Color.argb(136, 0, 0, 0));
+		mBg.setId(BG_VIEW_ID);
+		mBg.setOnClickListener(this);
+
+		mPanel = new LinearLayout(getActivity());
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		params.gravity = Gravity.BOTTOM;
+		mPanel.setLayoutParams(params);
+		mPanel.setOrientation(LinearLayout.VERTICAL);
+
+		parent.addView(mBg);
+		parent.addView(mPanel);
+		return parent;
 	}
 
 	private void createItems() {
@@ -143,21 +199,15 @@ public class ActionSheet extends Fragment implements OnClickListener {
 			if (i == (titles.length - 1)) {
 				return mAttrs.otherButtonBottomBackground;
 			}
-			return mAttrs.otherButtonMiddleBackground;
+			return mAttrs.getOtherButtonMiddleBackground();
 		}
 		return null;
 	}
 
 	@Override
 	public void onDestroyView() {
-		Animation an = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.as_bottom_out);
-		an.setFillAfter(true);
-		mPanel.startAnimation(an);
-		Animation an2 = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.as_alpha_out);
-		an2.setFillAfter(true);
-		mBg.startAnimation(an2);
+		mPanel.startAnimation(createTranslationOutAnimation());
+		mBg.startAnimation(createAlphaOutAnimation());
 		mView.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -169,7 +219,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 
 	private Attributes readAttribute() {
 		Attributes attrs = new Attributes(getActivity());
-		// 读取Style
+		// read style
 		TypedArray a = getActivity().getTheme().obtainStyledAttributes(null,
 				R.styleable.ActionSheet, R.attr.actionSheetStyle, 0);
 		Drawable background = a
@@ -238,6 +288,10 @@ public class ActionSheet extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		if (v.getId() == BG_VIEW_ID) {
+			// click background
+			return;
+		}
 		dismiss();
 		if (mListener != null) {
 			if (v.getId() == CANCEL_BUTTON_ID) {
@@ -250,25 +304,36 @@ public class ActionSheet extends Fragment implements OnClickListener {
 	}
 
 	private static class Attributes {
+		private Context mContext;
+
 		public Attributes(Context context) {
-			// 默认值
+			mContext = context;
+			// default value
 			this.background = new ColorDrawable(Color.TRANSPARENT);
-			this.cancelButtonBackground = context.getResources().getDrawable(
-					R.drawable.slt_as_ios7_cancel_bt);
-			this.otherButtonTopBackground = context.getResources().getDrawable(
-					R.drawable.slt_as_ios7_other_bt_top);
-			this.otherButtonMiddleBackground = context.getResources()
-					.getDrawable(R.drawable.slt_as_ios7_other_bt_middle);
-			this.otherButtonBottomBackground = context.getResources()
-					.getDrawable(R.drawable.slt_as_ios7_other_bt_bottom);
-			this.otherButtonSingleBackground = context.getResources()
-					.getDrawable(R.drawable.slt_as_ios7_other_bt_single);
-			this.cancelButtonTextColor = Color.BLUE;
-			this.otherButtonTextColor = Color.BLUE;
+			this.cancelButtonBackground = new ColorDrawable(Color.BLACK);
+			ColorDrawable gray = new ColorDrawable(Color.GRAY);
+			this.otherButtonTopBackground = gray;
+			this.otherButtonMiddleBackground = gray;
+			this.otherButtonBottomBackground = gray;
+			this.otherButtonSingleBackground = gray;
+			this.cancelButtonTextColor = Color.WHITE;
+			this.otherButtonTextColor = Color.BLACK;
 			this.padding = 20;
-			this.otherButtonSpacing = 0;
+			this.otherButtonSpacing = 2;
 			this.cancelButtonMarginTop = 10;
 			this.actionSheetTextSize = 16;
+		}
+
+		public Drawable getOtherButtonMiddleBackground() {
+			// if is a selector, need create a new drawable object
+			if (otherButtonMiddleBackground instanceof StateListDrawable) {
+				TypedArray a = mContext.getTheme().obtainStyledAttributes(null,
+						R.styleable.ActionSheet, R.attr.actionSheetStyle, 0);
+				otherButtonMiddleBackground = a
+						.getDrawable(R.styleable.ActionSheet_otherButtonMiddleBackground);
+				a.recycle();
+			}
+			return otherButtonMiddleBackground;
 		}
 
 		Drawable background;
@@ -276,6 +341,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		Drawable otherButtonTopBackground;
 		Drawable otherButtonMiddleBackground;
 		Drawable otherButtonBottomBackground;
+		int otherButtonBottomBackgroundId;
 		Drawable otherButtonSingleBackground;
 		int cancelButtonTextColor;
 		int otherButtonTextColor;
@@ -292,37 +358,22 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		private String mCancelButtonTitle;
 		private String[] mOtherButtonTitles;
 		private String mTag = "actionSheet";
+		private ActionSheetListener mListener;
 
 		public Builder(Context context, FragmentManager fragmentManager) {
 			mContext = context;
 			mFragmentManager = fragmentManager;
 		}
 
-		/**
-		 * 设置取消按钮标题
-		 * 
-		 * @param title
-		 */
 		public Builder setCancelButtonTitle(String title) {
 			mCancelButtonTitle = title;
 			return this;
 		}
 
-		/**
-		 * 设置取消按钮标题
-		 * 
-		 * @param strId
-		 */
 		public Builder setCancelButtonTitle(int strId) {
 			return setCancelButtonTitle(mContext.getString(strId));
 		}
 
-		/**
-		 * 设置其他按钮标题
-		 * 
-		 * @param titles
-		 * @return
-		 */
 		public Builder setOtherButtonTitles(String... titles) {
 			mOtherButtonTitles = titles;
 			return this;
@@ -330,6 +381,11 @@ public class ActionSheet extends Fragment implements OnClickListener {
 
 		public Builder setTag(String tag) {
 			mTag = tag;
+			return this;
+		}
+
+		public Builder setListener(ActionSheetListener listener) {
+			this.mListener = listener;
 			return this;
 		}
 
@@ -343,6 +399,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		public ActionSheet show() {
 			ActionSheet actionSheet = (ActionSheet) Fragment.instantiate(
 					mContext, ActionSheet.class.getName(), prepareArguments());
+			actionSheet.setActionSheetListener(mListener);
 			actionSheet.show(mFragmentManager, mTag);
 			return actionSheet;
 		}

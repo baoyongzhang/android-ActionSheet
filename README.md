@@ -6,3 +6,7 @@
    &nbsp;&nbsp;
    <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-2.png" width="320" alt="Screenshot"/>
 </p>
+
+# 使用方法
+
+待续。。。

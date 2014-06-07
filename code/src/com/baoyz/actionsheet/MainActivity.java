@@ -38,21 +38,26 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void showActionSheet() {
-		new ActionSheet.Builder(this, getSupportFragmentManager())
+		ActionSheet.createBuilder(this, getSupportFragmentManager())
 				.setCancelButtonTitle("Cancel")
 				.setOtherButtonTitles("Item1", "Item2", "Item3", "Item4")
-				.setListener(this).show();
-	}
-
-	@Override
-	public void onCancelButtonClick(ActionSheet actionSheet) {
-		Toast.makeText(getApplicationContext(), "click cancel", 0).show();
+				.setCancelableOnTouchOutside(true).setListener(this).show();
 	}
 
 	@Override
 	public void onOtherButtonClick(ActionSheet actionSheet, int index) {
 		Toast.makeText(getApplicationContext(), "click item index = " + index,
 				0).show();
+	}
+
+	@Override
+	public void onCancel(ActionSheet actionSheet) {
+		Toast.makeText(getApplicationContext(), "cancel", 0).show();
+	}
+
+	@Override
+	public void onDismiss(ActionSheet actionSheet) {
+		Toast.makeText(getApplicationContext(), "dismissed", 0).show();
 	}
 
 }

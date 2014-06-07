@@ -133,15 +133,18 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
         
          */
         public static final int AppBaseTheme=0x7f040002;
         /**  Application theme. 
+ <item name="actionSheetStyle">@style/ActionSheetStyleIOS6</item> 
          */
         public static final int AppTheme=0x7f040003;
     }

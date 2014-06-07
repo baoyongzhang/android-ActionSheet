@@ -1,5 +1,6 @@
 package com.baoyz.actionsheet;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -34,6 +35,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 
 	private static final String ARG_CANCEL_BUTTON_TITLE = "cancel_button_title";
 	private static final String ARG_OTHER_BUTTON_TITLES = "other_button_titles";
+	private static final String ARG_CANCELABLE_ONTOUCHOUTSIDE = "cancelable_ontouchoutside";
 	private static final int CANCEL_BUTTON_ID = 100;
 	private static final int BG_VIEW_ID = 10;
 	private static final int TRANSLATE_DURATION = 200;
@@ -65,6 +67,9 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.remove(this);
 		ft.commit();
+		if (mListener != null) {
+			mListener.onDismiss(this);
+		}
 	}
 
 	@Override
@@ -280,24 +285,34 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		return getArguments().getStringArray(ARG_OTHER_BUTTON_TITLES);
 	}
 
+	private boolean getCancelableOnTouchOutside() {
+		return getArguments().getBoolean(ARG_CANCELABLE_ONTOUCHOUTSIDE);
+	}
+
 	public void setActionSheetListener(ActionSheetListener listener) {
 		mListener = listener;
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == BG_VIEW_ID) {
+		if (v.getId() == BG_VIEW_ID && !getCancelableOnTouchOutside()) {
 			return;
 		}
 		dismiss();
 		if (mListener != null) {
-			if (v.getId() == CANCEL_BUTTON_ID) {
-				mListener.onCancelButtonClick(this);
+			if (v.getId() == CANCEL_BUTTON_ID || v.getId() == BG_VIEW_ID) {
+				mListener.onCancel(this);
 			} else {
 				mListener.onOtherButtonClick(this, v.getId() - CANCEL_BUTTON_ID
 						- 1);
 			}
+			;
 		}
+	}
+
+	public static Builder createBuilder(Context context,
+			FragmentManager fragmentManager) {
+		return new Builder(context, fragmentManager);
 	}
 
 	private static class Attributes {
@@ -336,7 +351,6 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		Drawable otherButtonTopBackground;
 		Drawable otherButtonMiddleBackground;
 		Drawable otherButtonBottomBackground;
-		int otherButtonBottomBackgroundId;
 		Drawable otherButtonSingleBackground;
 		int cancelButtonTextColor;
 		int otherButtonTextColor;
@@ -353,6 +367,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		private String mCancelButtonTitle;
 		private String[] mOtherButtonTitles;
 		private String mTag = "actionSheet";
+		private boolean mCancelableOnTouchOutside;
 		private ActionSheetListener mListener;
 
 		public Builder(Context context, FragmentManager fragmentManager) {
@@ -384,10 +399,17 @@ public class ActionSheet extends Fragment implements OnClickListener {
 			return this;
 		}
 
+		public Builder setCancelableOnTouchOutside(boolean cancelable) {
+			mCancelableOnTouchOutside = cancelable;
+			return this;
+		}
+
 		public Bundle prepareArguments() {
 			Bundle bundle = new Bundle();
 			bundle.putString(ARG_CANCEL_BUTTON_TITLE, mCancelButtonTitle);
 			bundle.putStringArray(ARG_OTHER_BUTTON_TITLES, mOtherButtonTitles);
+			bundle.putBoolean(ARG_CANCELABLE_ONTOUCHOUTSIDE,
+					mCancelableOnTouchOutside);
 			return bundle;
 		}
 
@@ -402,7 +424,10 @@ public class ActionSheet extends Fragment implements OnClickListener {
 	}
 
 	public static interface ActionSheetListener {
-		void onCancelButtonClick(ActionSheet actionSheet);
+
+		void onDismiss(ActionSheet actionSheet);
+
+		void onCancel(ActionSheet actionSheet);
 
 		void onOtherButtonClick(ActionSheet actionSheet, int index);
 	}

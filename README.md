@@ -12,26 +12,43 @@
 ### 创建一个ActionSheet并显示
 
 ```java
-new ActionSheet.Builder(this, getSupportFragmentManager())
+ActionSheet.createBuilder(this, getSupportFragmentManager())
 				.setCancelButtonTitle("Cancel")
 				.setOtherButtonTitles("Item1", "Item2", "Item3", "Item4")
+				.setCancelableOnTouchOutside(true)
 				.setListener(this).show();
 ```
+
+### 方法说明
+
+* `setCancelButtonTitle()` 设置取消按钮的标题
+* `setOtherButtonTitles()` 设置条目，String[]
+* `setCancelableOnTouchOutside()` 设置点击空白处关闭
+* `setListener()` 设置事件监听器
+* `show()` 返回`ActionSheet`对象，可以调用`ActionSheet`对象的`dismiss()`方法手动关闭
 
 ### 事件监听
 
 实现`ActionSheetListener`接口
+* `onOtherButtonClick()` 点击某个条目，`index`是条目的下标
+* `onCancel` 取消事件，点击取消按钮，或者点击空白处(`setCancelableOnTouchOutside(true)`)
+* `onDismiss()` 关闭事件
 
 ```java
-   @Override
-	public void onCancelButtonClick(ActionSheet actionSheet) {
-		Toast.makeText(getApplicationContext(), "click cancel", 0).show();
-	}
-
-	@Override
+   	@Override
 	public void onOtherButtonClick(ActionSheet actionSheet, int index) {
 		Toast.makeText(getApplicationContext(), "click item index = " + index,
 				0).show();
+	}
+
+	@Override
+	public void onCancel(ActionSheet actionSheet) {
+		Toast.makeText(getApplicationContext(), "cancel", 0).show();
+	}
+
+	@Override
+	public void onDismiss(ActionSheet actionSheet) {
+		Toast.makeText(getApplicationContext(), "dismissed", 0).show();
 	}
 ```
 

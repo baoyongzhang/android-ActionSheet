@@ -1,6 +1,5 @@
 package com.baoyz.actionsheet;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -48,6 +47,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 	private ViewGroup mGroup;
 	private View mBg;
 	private Attributes mAttrs;
+	private boolean isCancel = true;
 
 	public void show(FragmentManager manager, String tag) {
 		if (!mDismissed) {
@@ -56,6 +56,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		mDismissed = false;
 		FragmentTransaction ft = manager.beginTransaction();
 		ft.add(this, tag);
+		ft.addToBackStack(null);
 		ft.commit();
 	}
 
@@ -67,9 +68,6 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.remove(this);
 		ft.commit();
-		if (mListener != null) {
-			mListener.onDismiss(this);
-		}
 	}
 
 	@Override
@@ -218,6 +216,9 @@ public class ActionSheet extends Fragment implements OnClickListener {
 				mGroup.removeView(mView);
 			}
 		}, ALPHA_DURATION);
+		if (mListener != null) {
+			mListener.onDismiss(this, isCancel);
+		}
 		super.onDestroyView();
 	}
 
@@ -299,14 +300,12 @@ public class ActionSheet extends Fragment implements OnClickListener {
 			return;
 		}
 		dismiss();
-		if (mListener != null) {
-			if (v.getId() == CANCEL_BUTTON_ID || v.getId() == BG_VIEW_ID) {
-				mListener.onCancel(this);
-			} else {
+		if (v.getId() != CANCEL_BUTTON_ID && v.getId() != BG_VIEW_ID) {
+			if (mListener != null) {
 				mListener.onOtherButtonClick(this, v.getId() - CANCEL_BUTTON_ID
 						- 1);
 			}
-			;
+			isCancel = false;
 		}
 	}
 
@@ -425,9 +424,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 
 	public static interface ActionSheetListener {
 
-		void onDismiss(ActionSheet actionSheet);
-
-		void onCancel(ActionSheet actionSheet);
+		void onDismiss(ActionSheet actionSheet, boolean isCancel);
 
 		void onOtherButtonClick(ActionSheet actionSheet, int index);
 	}

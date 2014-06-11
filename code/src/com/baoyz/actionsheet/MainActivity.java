@@ -51,13 +51,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCancel(ActionSheet actionSheet) {
-		Toast.makeText(getApplicationContext(), "cancel", 0).show();
-	}
-
-	@Override
-	public void onDismiss(ActionSheet actionSheet) {
-		Toast.makeText(getApplicationContext(), "dismissed", 0).show();
+	public void onDismiss(ActionSheet actionSheet, boolean isCancle) {
+		Toast.makeText(getApplicationContext(), "dismissed isCancle = " + isCancle, 0).show();
 	}
 
 }

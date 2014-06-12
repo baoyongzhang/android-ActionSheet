@@ -65,6 +65,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 			return;
 		}
 		mDismissed = true;
+		getFragmentManager().popBackStack();
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.remove(this);
 		ft.commit();

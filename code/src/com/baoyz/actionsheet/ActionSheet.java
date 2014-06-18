@@ -19,6 +19,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -74,6 +75,16 @@ public class ActionSheet extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+		InputMethodManager imm = (InputMethodManager) getActivity()
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm.isActive()) {
+			View focusView = getActivity().getCurrentFocus();
+			if (focusView != null) {
+				imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+			}
+		}
+
 		mAttrs = readAttribute();
 
 		mView = createView();

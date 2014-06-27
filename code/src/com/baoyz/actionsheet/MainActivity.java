@@ -12,7 +12,7 @@ import android.widget.Toast;
  * 
  * @author Baoyz
  * 
- * @date 2014-6-6 ÏÂÎç5:42:37
+ * @date 2014-6-6 17:42:37
  */
 public class MainActivity extends FragmentActivity implements
 		ActionSheetListener {
@@ -26,11 +26,11 @@ public class MainActivity extends FragmentActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ios6:
-			// ÇëÔÚstyles.xmlÖĞÅäÖÃ
+			// ï¿½ï¿½ï¿½ï¿½styles.xmlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			setTheme(R.style.ActionSheetStyleIOS6);
 			break;
 		case R.id.ios7:
-			// ÇëÔÚstyles.xmlÖĞÅäÖÃ
+			// ï¿½ï¿½ï¿½ï¿½styles.xmlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			setTheme(R.style.ActionSheetStyleIOS7);
 			break;
 		}

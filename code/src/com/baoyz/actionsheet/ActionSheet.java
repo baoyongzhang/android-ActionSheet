@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ import android.widget.LinearLayout;
  * 
  * @author Baoyz
  * 
- * @date 2014-6-6 12:36:53
+ * @date 2014-6-6 ÏÂÎç12:36:53
  */
 public class ActionSheet extends Fragment implements OnClickListener {
 
@@ -161,7 +162,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 				bt.setBackgroundDrawable(getOtherButtonBg(titles, i));
 				bt.setText(titles[i]);
 				bt.setTextColor(mAttrs.otherButtonTextColor);
-				bt.setTextSize(mAttrs.actionSheetTextSize);
+				bt.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrs.actionSheetTextSize);
 				if (i > 0) {
 					LinearLayout.LayoutParams params = createButtonLayoutParams();
 					params.topMargin = mAttrs.otherButtonSpacing;
@@ -173,7 +174,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		}
 		Button bt = new Button(getActivity());
 		bt.getPaint().setFakeBoldText(true);
-		bt.setTextSize(mAttrs.actionSheetTextSize);
+		bt.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAttrs.actionSheetTextSize);
 		bt.setId(CANCEL_BUTTON_ID);
 		bt.setBackgroundDrawable(mAttrs.cancelButtonBackground);
 		bt.setText(getCancelButtonTitle());
@@ -282,9 +283,7 @@ public class ActionSheet extends Fragment implements OnClickListener {
 		attrs.cancelButtonMarginTop = (int) a.getDimension(
 				R.styleable.ActionSheet_cancelButtonMarginTop,
 				attrs.cancelButtonMarginTop);
-		attrs.actionSheetTextSize = a.getDimension(
-				R.styleable.ActionSheet_actionSheetTextSize,
-				attrs.actionSheetTextSize);
+		attrs.actionSheetTextSize = a.getDimensionPixelSize(R.styleable.ActionSheet_actionSheetTextSize, (int) attrs.actionSheetTextSize);
 
 		a.recycle();
 		return attrs;
@@ -340,10 +339,15 @@ public class ActionSheet extends Fragment implements OnClickListener {
 			this.otherButtonSingleBackground = gray;
 			this.cancelButtonTextColor = Color.WHITE;
 			this.otherButtonTextColor = Color.BLACK;
-			this.padding = 20;
-			this.otherButtonSpacing = 2;
-			this.cancelButtonMarginTop = 10;
-			this.actionSheetTextSize = 16;
+			this.padding = dp2px(20);
+			this.otherButtonSpacing = dp2px(2);
+			this.cancelButtonMarginTop = dp2px(10);
+			this.actionSheetTextSize = dp2px(16);
+		}
+		
+		private int dp2px(int dp){
+			return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+					dp, mContext.getResources().getDisplayMetrics());
 		}
 
 		public Drawable getOtherButtonMiddleBackground() {

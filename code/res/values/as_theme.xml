@@ -13,7 +13,7 @@
         <item name="actionSheetPadding">20dp</item>
         <item name="otherButtonSpacing">5dp</item>
         <item name="cancelButtonMarginTop">20dp</item>
-        <item name="actionSheetTextSize">12sp</item>
+        <item name="actionSheetTextSize">16sp</item>
     </style>
 
     <style name="ActionSheetStyleIOS7">
@@ -28,7 +28,7 @@
         <item name="actionSheetPadding">10dp</item>
         <item name="otherButtonSpacing">0dp</item>
         <item name="cancelButtonMarginTop">10dp</item>
-        <item name="actionSheetTextSize">12sp</item>
+        <item name="actionSheetTextSize">16sp</item>
     </style>
 
 </resources>

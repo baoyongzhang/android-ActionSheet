@@ -31,8 +31,7 @@ ActionSheet.createBuilder(this, getSupportFragmentManager())
 
 实现`ActionSheetListener`接口
 * `onOtherButtonClick()` 点击某个条目，`index`是条目的下标
-* `onCancel` 取消事件，点击取消按钮，或者点击空白处(`setCancelableOnTouchOutside(true)`)
-* `onDismiss()` 关闭事件
+* `onDismiss()` 关闭事件，`isCancel` 参数表示是否是点击取消按钮、返回键、或者点击空白处(`setCancelableOnTouchOutside(true)`)
 
 ```java
    	@Override
@@ -42,13 +41,8 @@ ActionSheet.createBuilder(this, getSupportFragmentManager())
 	}
 
 	@Override
-	public void onCancel(ActionSheet actionSheet) {
-		Toast.makeText(getApplicationContext(), "cancel", 0).show();
-	}
-
-	@Override
-	public void onDismiss(ActionSheet actionSheet) {
-		Toast.makeText(getApplicationContext(), "dismissed", 0).show();
+	public void onDismiss(ActionSheet actionSheet, boolean isCancle) {
+		Toast.makeText(getApplicationContext(), "dismissed isCancle = " + isCancle, 0).show();
 	}
 ```
 

@@ -27,10 +27,9 @@ import android.widget.LinearLayout;
 
 /**
  * UIActionSheet
- * 
- * @author Baoyz
- * 
- * @date 2014-6-6 обнГ12:36:53
+ * @author baoyz
+ * @date 2014-6-6
+ *
  */
 public class ActionSheet extends Fragment implements OnClickListener {
 

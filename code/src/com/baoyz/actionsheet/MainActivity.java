@@ -9,10 +9,9 @@ import android.widget.Toast;
 
 /**
  * 
- * 
- * @author Baoyz
- * 
- * @date 2014-6-6 17:42:37
+ * @author baoyz
+ * @date 2014-6-6
+ *
  */
 public class MainActivity extends FragmentActivity implements
 		ActionSheetListener {
@@ -26,11 +25,9 @@ public class MainActivity extends FragmentActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ios6:
-			// ����styles.xml������
 			setTheme(R.style.ActionSheetStyleIOS6);
 			break;
 		case R.id.ios7:
-			// ����styles.xml������
 			setTheme(R.style.ActionSheetStyleIOS7);
 			break;
 		}

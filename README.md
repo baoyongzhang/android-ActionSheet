@@ -1,5 +1,5 @@
 # ActionSheetForAndroid
-模仿IOS里面的UIActionSheet控件，有IOS6和IOS7两种风格，可以自定义风格，背景图片、按钮图片、文字颜色、间距等。
+模仿IOS里面的UIActionSheet控件，有iOS6和iOS7两种风格，可以自定义风格，背景图片、按钮图片、文字颜色、间距等。
 
 <p>
    <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-1.png" width="320" alt="Screenshot"/>
@@ -62,7 +62,7 @@ ActionSheet.createBuilder(this, getSupportFragmentManager())
 还可以自定义样式，自定义一个style即可，可以参考ActionSheetStyleIOS6/ActionSheetStyleIOS7的写法
 
 ```xml
- <!-- IOS7样式 -->
+ <!-- iOS7样式 -->
  <style name="ActionSheetStyleIOS7">
         <item name="actionSheetBackground">@android:color/transparent</item>
         <item name="cancelButtonBackground">@drawable/slt_as_ios7_cancel_bt</item>

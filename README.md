@@ -1,5 +1,5 @@
-# ActionSheetForAndroid
-模仿IOS里面的UIActionSheet控件，有iOS6和iOS7两种风格，可以自定义风格，背景图片、按钮图片、文字颜色、间距等。
+# ActionSheet
+This is like iOS UIActionSheet component, has iOS6 and iOS7 style, support custom style, background, button image, text color and Spacing etc.
 
 <p>
    <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-1.png" width="320" alt="Screenshot"/>
@@ -7,9 +7,9 @@
    <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-2.png" width="320" alt="Screenshot"/>
 </p>
 
-# 使用方法
+# Usage
 
-### 创建一个ActionSheet并显示
+### Create ActionSheet and show
 
 ```java
 ActionSheet.createBuilder(this, getSupportFragmentManager())
@@ -19,19 +19,19 @@ ActionSheet.createBuilder(this, getSupportFragmentManager())
 				.setListener(this).show();
 ```
 
-### 方法说明
+### Methods
 
-* `setCancelButtonTitle()` 设置取消按钮的标题
-* `setOtherButtonTitles()` 设置条目，String[]
-* `setCancelableOnTouchOutside()` 设置点击空白处关闭
-* `setListener()` 设置事件监听器
-* `show()` 返回`ActionSheet`对象，可以调用`ActionSheet`对象的`dismiss()`方法手动关闭
+* `setCancelButtonTitle()` Cancel button title, (String)
+* `setOtherButtonTitles()` Item buttons title，(String[])
+* `setCancelableOnTouchOutside()` Touch outside to close, (boolean)
+* `setListener()` set a Listener to listen event
+* `show()` Show ActionSheet, return `ActionSheet` Object，call `dismiss()` method of `ActionSheet` to close.
 
-### 事件监听
+### Listen event
 
-实现`ActionSheetListener`接口
-* `onOtherButtonClick()` 点击某个条目，`index`是条目的下标
-* `onDismiss()` 关闭事件，`isCancel` 参数表示是否是点击取消按钮、返回键、或者点击空白处(`setCancelableOnTouchOutside(true)`)
+implementing `ActionSheetListener` interface.
+* `onOtherButtonClick()` Click item event，`index` is item index.
+* `onDismiss()` Dismiss event.
 
 ```java
    	@Override
@@ -46,24 +46,24 @@ ActionSheet.createBuilder(this, getSupportFragmentManager())
 	}
 ```
 
-### 样式
+### Style
 
-默认的样式非常丑陋，项目中提供了两种Style，可以配置Theme
+Default style is bad，ActionSheet has iOS6 and iOS7 style，you can configure the theme.
 
 ```xml
 <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="actionSheetStyle">@style/ActionSheetStyleIOS6</item>
+        <item name="actionSheetStyle">@style/ActionSheetStyleiOS6</item>
         or
-        <item name="actionSheetStyle">@style/ActionSheetStyleIOS7</item>
+        <item name="actionSheetStyle">@style/ActionSheetStyleiOS7</item>
     </style>
 ```
 
-还可以自定义样式，自定义一个style即可，可以参考ActionSheetStyleIOS6/ActionSheetStyleIOS7的写法
+You can custom style，You can refer to ActionSheetStyleiOS6/ActionSheetStyleiOS7 writing.
 
 ```xml
- <!-- iOS7样式 -->
- <style name="ActionSheetStyleIOS7">
+ <!-- iOS7 Style -->
+ <style name="ActionSheetStyleiOS7">
         <item name="actionSheetBackground">@android:color/transparent</item>
         <item name="cancelButtonBackground">@drawable/slt_as_ios7_cancel_bt</item>
         <item name="otherButtonTopBackground">@drawable/slt_as_ios7_other_bt_top</item>
@@ -79,18 +79,18 @@ ActionSheet.createBuilder(this, getSupportFragmentManager())
     </style>
 ```
 
-### Style属性介绍
-* `actionSheetBackground` 背景
-* `cancelButtonBackground` 取消按钮背景
-* `otherButtonTopBackground` 选项顶部按钮背景
-* `otherButtonMiddleBackground` 选项中部按钮背景
-* `otherButtonBottomBackground` 选项底部按钮背景
-* `otherButtonSingleBackground` 选项只有一个的按钮背景
-* `cancelButtonTextColor` 取消按钮的文字颜色
-* `otherButtonTextColor` 选项按钮的文字颜色
-* `actionSheetPadding` 内边距
-* `otherButtonSpacing` 选项按钮的间距
-* `cancelButtonMarginTop` 取消按钮顶部间距
-* `actionSheetTextSize` 选项按钮文字颜色
+### Style attributes
+* `actionSheetBackground`
+* `cancelButtonBackground`
+* `otherButtonTopBackground`
+* `otherButtonMiddleBackground`
+* `otherButtonBottomBackground`
+* `otherButtonSingleBackground`
+* `cancelButtonTextColor`
+* `otherButtonTextColor`
+* `actionSheetPadding`
+* `otherButtonSpacing`
+* `cancelButtonMarginTop`
+* `actionSheetTextSize`
 
 

@@ -1,5 +1,7 @@
 # ActionSheet
-This is like iOS UIActionSheet component, has iOS6 and iOS7 style, support custom style, background, button image, text color and Spacing etc.
+[ ![Download](https://api.bintray.com/packages/baoyongzhang/maven/ActionSheet/images/download.svg) ](https://bintray.com/baoyongzhang/maven/ActionSheet/_latestVersion)
+
+This is like iOS UIActionSheet component, has iOS6 and iOS7 style, support custom style, background, button image, text color and spacing etc.
 
 <p>
    <img src="https://raw.githubusercontent.com/baoyongzhang/ActionSheetForAndroid/master/screenshot-1.png" width="320" alt="Screenshot"/>
@@ -8,6 +10,14 @@ This is like iOS UIActionSheet component, has iOS6 and iOS7 style, support custo
 </p>
 
 # Usage
+
+### Add dependency
+
+```groovy
+dependencies {
+    compile 'com.baoyz.actionsheet:library:1.1.0'
+}
+```
 
 ### Create ActionSheet and show
 
@@ -59,7 +69,7 @@ Default style is bad，ActionSheet has iOS6 and iOS7 style，you can configure t
     </style>
 ```
 
-You can custom style，You can refer to ActionSheetStyleiOS6/ActionSheetStyleiOS7 writing.
+You can custom style, can refer to ActionSheetStyleiOS6/ActionSheetStyleiOS7 writing.
 
 ```xml
  <!-- iOS7 Style -->

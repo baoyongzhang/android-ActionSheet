@@ -85,7 +85,7 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);
         ft.addToBackStack(null);
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     public void dismiss() {

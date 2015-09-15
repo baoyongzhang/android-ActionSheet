@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyCharacterMap;
@@ -67,6 +68,8 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
     private static final int TRANSLATE_DURATION = 200;
     private static final int ALPHA_DURATION = 300;
 
+    private static final String EXTRA_DISMISSED = "extra_dismissed";
+
     private boolean mDismissed = true;
     private ActionSheetListener mListener;
     private View mView;
@@ -96,7 +99,21 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         getFragmentManager().popBackStack();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.remove(this);
-        ft.commit();
+        ft.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(EXTRA_DISMISSED, mDismissed);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mDismissed = savedInstanceState.getBoolean(EXTRA_DISMISSED);
+        }
     }
 
     @Override
@@ -123,6 +140,22 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         mBg.startAnimation(createAlphaInAnimation());
         mPanel.startAnimation(createTranslationInAnimation());
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPanel.startAnimation(createTranslationOutAnimation());
+        mBg.startAnimation(createAlphaOutAnimation());
+        mView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mGroup.removeView(mView);
+            }
+        }, ALPHA_DURATION);
+        if (mListener != null) {
+            mListener.onDismiss(this, isCancel);
+        }
+        super.onDestroyView();
     }
 
     private Animation createTranslationInAnimation() {
@@ -275,22 +308,6 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
             return mAttrs.getOtherButtonMiddleBackground();
         }
         return null;
-    }
-
-    @Override
-    public void onDestroyView() {
-        mPanel.startAnimation(createTranslationOutAnimation());
-        mBg.startAnimation(createAlphaOutAnimation());
-        mView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mGroup.removeView(mView);
-            }
-        }, ALPHA_DURATION);
-        if (mListener != null) {
-            mListener.onDismiss(this, isCancel);
-        }
-        super.onDestroyView();
     }
 
     private Attributes readAttribute() {

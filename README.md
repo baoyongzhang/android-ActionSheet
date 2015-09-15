@@ -16,7 +16,7 @@ This is like iOS UIActionSheet component, has iOS6 and iOS7 style, support custo
 
 ```groovy
 dependencies {
-    compile 'com.baoyz.actionsheet:library:1.1.1'
+    compile 'com.baoyz.actionsheet:library:1.1.2'
 }
 ```
 

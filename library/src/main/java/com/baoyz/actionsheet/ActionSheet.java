@@ -23,20 +23,27 @@
  */
 package com.baoyz.actionsheet;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -73,6 +80,7 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         if (!mDismissed) {
             return;
         }
+
         mDismissed = false;
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);
@@ -164,10 +172,42 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         params.gravity = Gravity.BOTTOM;
         mPanel.setLayoutParams(params);
         mPanel.setOrientation(LinearLayout.VERTICAL);
-
+        parent.setPadding(0, 0, 0, getNavBarHeight(getActivity()));
         parent.addView(mBg);
         parent.addView(mPanel);
         return parent;
+    }
+
+    public int getNavBarHeight(Context c) {
+        int result = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            boolean hasMenuKey = ViewConfiguration.get(c).hasPermanentMenuKey();
+            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+
+            if (!hasMenuKey && !hasBackKey) {
+                //The device has a navigation bar
+                Resources resources = c.getResources();
+
+                int orientation = getResources().getConfiguration().orientation;
+                int resourceId;
+                if (isTablet(c)) {
+                    resourceId = resources.getIdentifier(orientation == Configuration.ORIENTATION_PORTRAIT ? "navigation_bar_height" : "navigation_bar_height_landscape", "dimen", "android");
+                } else {
+                    resourceId = resources.getIdentifier(orientation == Configuration.ORIENTATION_PORTRAIT ? "navigation_bar_height" : "navigation_bar_width", "dimen", "android");
+                }
+
+                if (resourceId > 0) {
+                    return getResources().getDimensionPixelSize(resourceId);
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean isTablet(Context c) {
+        return (c.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     private void createItems() {
@@ -363,7 +403,7 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
             this.actionSheetTextSize = dp2px(16);
         }
 
-        private int dp2px(int dp){
+        private int dp2px(int dp) {
             return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     dp, mContext.getResources().getDisplayMetrics());
         }

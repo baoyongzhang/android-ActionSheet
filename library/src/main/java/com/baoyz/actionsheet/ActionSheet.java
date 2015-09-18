@@ -80,10 +80,9 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
     private boolean isCancel = true;
 
     public void show(FragmentManager manager, String tag) {
-        if (!mDismissed) {
+        if (!mDismissed || manager.isDestroyed()) {
             return;
         }
-
         mDismissed = false;
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);

@@ -34,6 +34,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -97,16 +98,17 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         mDismissed = true;
         new Handler().post(new Runnable() {
             public void run() {
-                getSupportFragmentManager().popBackStack();
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.remove(this);
+                getFragmentManager().popBackStack();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.remove(ActionSheet.this);
                 ft.commitAllowingStateLoss();
             }
+        });
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
         outState.putBoolean(EXTRA_DISMISSED, mDismissed);
     }
 

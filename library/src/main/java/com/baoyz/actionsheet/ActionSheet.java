@@ -85,10 +85,13 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
             return;
         }
         mDismissed = false;
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, tag);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
+        new Handler().post(new Runnable() {
+            public void run() {
+                FragmentTransaction ft = manager.beginTransaction();
+                ft.add(this, tag);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
+            });
     }
 
     public void dismiss() {
@@ -108,7 +111,6 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putBoolean(EXTRA_DISMISSED, mDismissed);
     }
 

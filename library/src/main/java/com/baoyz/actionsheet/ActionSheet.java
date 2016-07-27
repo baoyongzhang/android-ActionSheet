@@ -55,6 +55,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import java.lang.reflect.Method;
+
 /**
  * android-ActionSheet
  * Created by baoyz on 15/6/30.
@@ -80,7 +82,7 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
     private Attributes mAttrs;
     private boolean isCancel = true;
 
-    public void show(FragmentManager manager, String tag) {
+    public void show(final FragmentManager manager, final String tag) {
         if (!mDismissed || manager.isDestroyed()) {
             return;
         }
@@ -88,10 +90,11 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         new Handler().post(new Runnable() {
             public void run() {
                 FragmentTransaction ft = manager.beginTransaction();
-                ft.add(this, tag);
+                ft.add(ActionSheet.this, tag);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
-            });
+            }
+        });
     }
 
     public void dismiss() {
@@ -217,36 +220,39 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
         return parent;
     }
 
-    public int getNavBarHeight(Context c) {
-        int result = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            boolean hasMenuKey = ViewConfiguration.get(c).hasPermanentMenuKey();
-            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
-
-            if (!hasMenuKey && !hasBackKey) {
-                //The device has a navigation bar
-                Resources resources = c.getResources();
-
-                int orientation = getResources().getConfiguration().orientation;
-                int resourceId;
-                if (isTablet(c)) {
-                    resourceId = resources.getIdentifier(orientation == Configuration.ORIENTATION_PORTRAIT ? "navigation_bar_height" : "navigation_bar_height_landscape", "dimen", "android");
-                } else {
-                    resourceId = resources.getIdentifier(orientation == Configuration.ORIENTATION_PORTRAIT ? "navigation_bar_height" : "navigation_bar_width", "dimen", "android");
-                }
-
-                if (resourceId > 0) {
-                    return getResources().getDimensionPixelSize(resourceId);
-                }
-            }
+    public int getNavBarHeight(Context context) {
+        int navigationBarHeight = 0;
+        Resources rs = context.getResources();
+        int id = rs.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (id > 0 && checkDeviceHasNavigationBar(context)) {
+            navigationBarHeight = rs.getDimensionPixelSize(id);
         }
-        return result;
+
+        return navigationBarHeight;
     }
 
-    private boolean isTablet(Context c) {
-        return (c.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    private boolean checkDeviceHasNavigationBar(Context context) {
+        boolean hasNavigationBar = false;
+        Resources rs = context.getResources();
+        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            hasNavigationBar = rs.getBoolean(id);
+        }
+        try {
+            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", String.class);
+            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+            if ("1".equals(navBarOverride)) {
+                hasNavigationBar = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavigationBar = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return hasNavigationBar;
+
     }
 
     private void createItems() {

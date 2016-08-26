@@ -23,9 +23,7 @@
  */
 package com.baoyz.actionsheet;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -38,14 +36,10 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -61,6 +55,7 @@ import java.lang.reflect.Method;
  * android-ActionSheet
  * Created by baoyz on 15/6/30.
  */
+@SuppressWarnings("ResourceType")
 public class ActionSheet extends Fragment implements View.OnClickListener {
 
     private static final String ARG_CANCEL_BUTTON_TITLE = "cancel_button_title";
@@ -222,12 +217,13 @@ public class ActionSheet extends Fragment implements View.OnClickListener {
 
     public int getNavBarHeight(Context context) {
         int navigationBarHeight = 0;
-        Resources rs = context.getResources();
-        int id = rs.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (id > 0 && checkDeviceHasNavigationBar(context)) {
-            navigationBarHeight = rs.getDimensionPixelSize(id);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Resources rs = context.getResources();
+            int id = rs.getIdentifier("navigation_bar_height", "dimen", "android");
+            if (id > 0 && checkDeviceHasNavigationBar(context)) {
+                navigationBarHeight = rs.getDimensionPixelSize(id);
+            }
         }
-
         return navigationBarHeight;
     }
 
